@@ -7,6 +7,7 @@ authors:
     email: "wcy0969@gmail.com"
     affiliation: "Independent researcher"
 year: 2026
+doi: 10.5281/zenodo.21775055
 repository-code: "https://github.com/ycmath/cohomological-price-of-not"
 license: Apache-2.0
 keywords:
