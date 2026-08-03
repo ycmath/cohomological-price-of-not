@@ -7,6 +7,10 @@
 *Machine-assisted mathematics with the Lean 4 kernel as the final acceptance
 gate.*
 
+**📄 Full paper (complete proofs + Lean correspondence table):
+[`paper/the-cohomological-price-of-not.md`](paper/the-cohomological-price-of-not.md)**
+— the sections below are an overview.
+
 ---
 
 ## Abstract
@@ -83,7 +87,8 @@ every monotone violation and satisfies d(h) = k−1 exactly (a three-zone
 budget argument; the top-zone cap is essential — the naive ¬f∧[ω≥1] witness
 fails already at k = 1). *Lower bound*: one adjoined negation raises d by at
 most one (ascent/descent alternation along chains; valid over any finite
-poset). Every statement is machine-verified in the Lean artifact in `lean/`.
+poset). Complete proofs are in the [paper](paper/the-cohomological-price-of-not.md);
+every statement is machine-verified in the Lean artifact in `lean/`.
 
 ## 4. Level, not degree
 
@@ -108,10 +113,9 @@ lean/axcheck.log   -- full `lake build` log with #print axioms for all 19 theore
 ## Repository layout
 
 ```
-lean/           Lean 4 project (core-only; lake build)
+paper/          the full paper: complete proofs + paper-to-Lean correspondence
+lean/           Lean 4 project (core-only; lake build) + axcheck.log
 verification/   independent Python verifications (stdlib-only) + fresh logs
-zenodo/         deposit metadata (DOI minted on release)
-posts/          explanatory thread series (x.com)
 ```
 
 Reproduce: `cd lean && lake build` (Lean 4 v4.31.0 via elan), and
