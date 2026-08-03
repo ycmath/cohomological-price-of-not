@@ -1,0 +1,412 @@
+\documentclass[11pt]{article}
+\usepackage[margin=1.1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{booktabs}
+\usepackage[colorlinks=true,linkcolor=blue,citecolor=blue,urlcolor=blue]{hyperref}
+
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\theoremstyle{remark}
+\newtheorem{remark}[theorem]{Remark}
+
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\Dfour}{\mathsf{D4}}
+\newcommand{\chis}{\chi_\sigma}
+\newcommand{\chip}{\chi_P}
+
+\title{The Cohomological Price of NOT}
+\author{Won Chul Yang\\
+\small independent researcher \quad \texttt{wcy0969@gmail.com}}
+\date{2026}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+The minimal number of negations needed to compute a Boolean function is
+governed by Markov's decrease invariant $d(f)$: circuits need
+$\lceil\log_2(d(f)+1)\rceil$ negations (Markov 1958), and formulas need
+exactly $d(f)$ (Morizumi 2009). We show that the decrease invariant carries a
+\emph{cohomological address}. On the dual-rail four-valued lattice, the
+negation $\sigma$ and the rail-swap $P$ generate a Klein four-group $V_4$
+whose character group $\operatorname{Hom}(V_4,\F_2)\cong\F_2^2$ has exactly
+three nonzero characters, and $\chis$ is the \emph{unique} one that prices
+negation --- the two alternatives fail in opposite directions, witnessed by
+$P$ (face-flip $1$, cost $0$) and $\sigma P$ (face-flip $0$, cost $1$). The
+main theorem reads the full invariant as an iterated extension: $d(f)$ equals
+the minimal length of a nested $\chis$-tower, each rung adjoining exactly one
+negation inside a monotone context. The upper bound uses a single uniform
+three-zone witness; the lower bound is an alternation argument valid over any
+finite poset. All statements are machine-verified in core Lean~4 with kernel
+axioms \texttt{propext} and \texttt{Quot.sound} only.
+\end{abstract}
+
+\section{Introduction}
+
+Markov \cite{markov} determined the inversion complexity of Boolean
+circuits: $I(f)=\lceil\log_2(d(f)+1)\rceil$, where the decrease $d(f)$ counts
+the maximal number of $1\to 0$ descents of $f$ along an increasing chain of
+inputs. Morizumi \cite{morizumi} settled the formula model:
+$I_{\mathrm{for}}(f)=d(f)$ exactly. For multi-valued logic,
+Kochergin--Mikhailovich \cite{km} extended the \emph{circuit} law (still
+logarithmic); no formula-exact multi-valued law appears in the literature.
+
+This note contributes three things.
+
+\textbf{(i) A four-valued frame.} On the dual-rail lattice $\Dfour$ the
+exact formula-model law persists (the companion preprint \cite{wcy2} proves
+$\nu(f)=d(f)$ in that setting; we do not reprove it here).
+
+\textbf{(ii) A cohomological reading.} The negation $\sigma$ and the
+monotone rail-swap $P$ generate $V_4$, and among the three nonzero
+characters of $H^1(V_4;\F_2)$ exactly one --- $\chis$ --- prices negation
+(\S\ref{sec:char}). The seemingly natural candidate, the face-flip character
+$\chis+\chip$, fails in \emph{both} directions.
+
+\textbf{(iii) A nested normal form.} $d(f)$ is the minimal length of a
+nested tower $T_0\subseteq T_1\subseteq\cdots$ in which each rung adjoins
+exactly one negation inside a monotone context (\S\ref{sec:tower}).
+Morizumi's upper-bound construction is the \emph{parallel} decomposition
+$f_1\vee(f_2\wedge\neg f_t)$; the nested single-peel form proved here is
+strictly more structured, and appears to be new even in the Boolean case.
+The upper bound is produced by one uniform three-zone witness
+(\S\ref{sec:witness}), whose correctness is a short budget argument; a
+cautionary example shows the obvious witness is wrong already at $d(f)=1$.
+
+Everything below is machine-verified in core Lean~4 (\S\ref{sec:lean}).
+
+\section{Preliminaries}
+
+Let $R=\{0,1\}$ with $0<1$, and order $R^n$ componentwise. A \emph{chain} is
+an increasing sequence $x^0<x^1<\cdots<x^m$ in $R^n$. For $f:R^n\to R$ and a
+chain $X$, the \emph{decrease} $d_X(f)$ is the number of indices $i$ with
+$f(x^i)=1$ and $f(x^{i+1})=0$; $d(f)=\max_X d_X(f)$ over maximal chains. For
+a binary word $w$, write $\mathrm{rises}(w)$ and $\mathrm{drops}(w)$ for the
+numbers of $01$- and $10$-adjacencies. The \emph{decrease potential} is
+\[
+\omega(x)\;:=\;\max\{\,\text{drops of }f\text{ along an increasing chain
+ending at }x\,\},
+\]
+so $\omega$ is nondecreasing along chains, $\omega\le d(f)$ everywhere, and
+every descent step strictly increases $\omega$.
+
+The dual-rail lattice is $\Dfour=\{0,1\}^2$, ordered componentwise (four
+values: bottom $(0,0)$, the two \emph{resolved} values $(1,0)$ and $(0,1)$
+forming the face $R$, and top $(1,1)$). Define the involutions
+$\sigma(a,b)=(1-a,\,1-b)$ (negation; order-reversing) and $P(a,b)=(b,a)$
+(rail-swap; monotone). They commute and generate
+$V_4=\{\mathrm{id},\sigma,P,\sigma P\}$.
+
+\section{The pricing character}\label{sec:char}
+
+$H^1(V_4;\F_2)=\operatorname{Hom}(V_4,\F_2)\cong\F_2^2$, with the three
+nonzero characters determined by their kernels: $\chis$ (kernel
+$\{\mathrm{id},P\}$), $\chip$ (kernel $\{\mathrm{id},\sigma\}$), and the
+face-flip character $\chis+\chip$ (kernel $\{\mathrm{id},\sigma P\}$) ---
+the character that is $1$ exactly on the elements moving the resolved face
+$R$. For $\gamma\in V_4$ let $\nu(\gamma)\in\{0,1\}$ be its negation cost:
+$0$ if $\gamma$ is monotone, $1$ otherwise.
+
+\begin{proposition}[gate typing]\label{prop:gate}
+As vectors over $(\mathrm{id},\sigma,P,\sigma P)$:
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+$\gamma$ & monotone & $\nu(\gamma)$ & $\chis(\gamma)$ & $(\chis+\chip)(\gamma)$\\
+\midrule
+$\mathrm{id}$ & yes & $0$ & $0$ & $0$\\
+$\sigma$      & no  & $1$ & $1$ & $1$\\
+$P$           & yes & $0$ & $0$ & $\mathbf{1}$\\
+$\sigma P$    & no  & $1$ & $1$ & $\mathbf{0}$\\
+\bottomrule
+\end{tabular}
+\end{center}
+Hence $\nu=\chis$ pointwise on $V_4$, and $\chis$ is the \textbf{unique}
+nonzero character with this property: $\chip$ fails at $\sigma$, and the
+face-flip character fails in both directions --- at $P$ (flip without cost)
+and at $\sigma P$ (cost without flip).
+\end{proposition}
+
+\begin{proof}
+Inspection of the four actions on $\Dfour$: $\sigma$ swaps both the
+endpoints $(0,0)\leftrightarrow(1,1)$ and the face
+$(1,0)\leftrightarrow(0,1)$ and reverses the order; $P$ fixes the endpoints,
+swaps the face, and is monotone; $\sigma P$ swaps the endpoints, fixes the
+face, and is not monotone (it exchanges bottom and top). Machine-checked as
+\texttt{gate\_table} and \texttt{chiSigma\_eq\_not\_kMono} (axiom-free
+kernel \texttt{decide}).
+\end{proof}
+
+The two witnesses deserve names: $P$ is the \emph{first separating witness}
+(face-flip $1$, cost $0$) and $\sigma P$ the \emph{second} (cost $1$,
+face-flip $0$). Together they show that ``pricing negation'' and ``moving
+the resolved face'' are different characters --- they differ exactly by
+$\chip$.
+
+\section{Subadditivity and the lower bound}\label{sec:subadd}
+
+\begin{lemma}[alternation]\label{lem:alt}
+For every binary word $w$,
+$\mathrm{rises}(w)\le\mathrm{drops}(w)+1$; if $w$ begins with $1$, then
+$\mathrm{rises}(w)\le\mathrm{drops}(w)$.
+\end{lemma}
+
+\begin{proof}
+Induction on the word, tracking the first letter: each maximal $1$-block
+contributes at most one rise on its left and one drop on its right, and only
+the initial $1$-block can lack a preceding rise. (Lean:
+\texttt{rises\_le\_drops\_succ}.)
+\end{proof}
+
+\begin{lemma}[drop transfer]\label{lem:transfer}
+Let $g$ be monotone in both arguments, $h$ arbitrary, and
+$f(x)=g(x,\neg h(x))$. If $x<x'$ is a chain step with $f(x)=1$ and
+$f(x')=0$, then $h(x)=0$ and $h(x')=1$ (an ascent of $h$).
+\end{lemma}
+
+\begin{proof}
+If $\neg h(x)\le\neg h(x')$ then $(x,\neg h(x))\le(x',\neg h(x'))$ and
+monotonicity of $g$ forces $f(x)\le f(x')$, a contradiction. So $\neg h$
+descends, i.e.\ $h$ ascends.
+\end{proof}
+
+\begin{theorem}[subadditivity]\label{thm:subadd}
+For monotone $g$ and arbitrary $h$,
+$d\bigl(g(x,\neg h(x))\bigr)\le d(h)+1$. In fact, along any single chain,
+$\mathrm{drops}(f\text{-word})\le\mathrm{rises}(h\text{-word})
+\le\mathrm{drops}(h\text{-word})+1$; the argument uses only adjacent steps,
+so it is valid over any relation, in particular any finite poset.
+(Lean: \texttt{subadd\_chain}, \texttt{subadd\_decOn}.)
+\end{theorem}
+
+\begin{proof}
+Each descent of $f$ is matched by an ascent of $h$ at the same step
+(Lemma~\ref{lem:transfer}); ascents are bounded by descents plus one
+(Lemma~\ref{lem:alt}); descents of $h$ along any chain are at most $d(h)$.
+\end{proof}
+
+\begin{corollary}[tower lower bound]\label{cor:lower}
+Define $T_0=$ the monotone functions and
+$T_{k+1}=\{\,g(x,\neg h(x)) : g\text{ monotone},\ h\in T_k\,\}$. Then
+$f\in T_k$ implies $d(f)\le k$. (Lean: \texttt{F1\_lower}, via the
+end-value-refined form
+$\mathrm{rises}(w)\le\mathrm{drops}(w)+[w\text{ ends in }1]$.)
+\end{corollary}
+
+\begin{corollary}[no skipping]\label{cor:noskip}
+If $f=g(x,\neg h)$ with $g$ monotone, then $d(h)\ge d(f)-1$.
+\end{corollary}
+
+\section{The three-zone witness}\label{sec:witness}
+
+Fix $f$ with $d(f)=k\ge 1$. Call a pair $x<x'$ \emph{violated} if $f(x)=1$
+and $f(x')=0$; write $V^-$ and $V^+$ for the lower and upper points of
+violated pairs.
+
+\begin{lemma}[potential jump]\label{lem:jump}
+Across a violated pair, $\omega(x)+1\le\omega(x')$. In particular
+$\omega(x)\le k-1$ and $\omega(x')\ge 1$. (Lean: \texttt{omega\_viol}.)
+\end{lemma}
+
+\begin{proof}
+Take a cover-path from $x$ up to $x'$ and induct along it. If the first
+step already descends ($f=1$ at its bottom, $f=0$ at its top), strictness of
+$\omega$ across a descent gives the jump, and monotonicity of $\omega$
+carries it to $x'$. Otherwise $f$ is still $1$ at the intermediate point and
+the induction hypothesis applies from there, with monotonicity of $\omega$
+across the first step.
+\end{proof}
+
+\begin{theorem}[three-zone witness]\label{thm:witness}
+Define
+\[
+h\;:=\;1 \text{ on } \{\omega\ge k\},\qquad
+\neg f \text{ on } \{1\le\omega\le k-1\},\qquad
+0 \text{ on } \{\omega=0\}.
+\]
+Then \textup{(a)} $h$ covers every violated pair: $h=0$ on $V^-$ and $h=1$
+on $V^+$; and \textup{(b)} $d(h)=k-1$ exactly. (Lean:
+\texttt{hgen\_covering}, \texttt{hgen\_drops\_le}, \texttt{omega\_hgen\_le},
+over an abstract descent potential; \texttt{cube\_descPotential} discharges
+the potential axioms for the concrete $\omega$.)
+\end{theorem}
+
+\begin{proof}
+(a) For $x\in V^-$: $\omega(x)\le k-1$ by Lemma~\ref{lem:jump}, so $h(x)$ is
+either $0$ (zone $0$) or $\neg f(x)=0$ (middle zone). For $x'\in V^+$:
+$\omega(x')\ge 1$, so $h(x')$ is either $\neg f(x')=1$ (middle) or $1$ (top
+zone).
+
+(b) Along any chain, $\omega$ is nondecreasing, so the chain traverses the
+zones in the order $\{\omega=0\}\to\{1\le\omega\le k-1\}\to\{\omega\ge k\}$,
+each a contiguous (possibly empty) stretch. $h$ is constant $0$, then
+$\neg f$, then constant $1$. A descent of $h$ cannot start at the $0$-zone
+($h=0$), cannot occur inside the top zone ($h=1$), and cannot occur at
+either zone boundary (entering the middle from $0$ cannot descend; leaving
+the middle to the top ends at $1$). So every descent of $h$ lies inside the
+middle stretch and is an \emph{ascent} of $f$ there. Inside the middle
+stretch, each descent of $f$ strictly increases $\omega$, and $\omega$ stays
+within $[1,k-1]$; hence the stretch contains at most $k-2$ descents of $f$,
+and by alternation at most $k-1$ ascents. So $d(h)\le k-1$; equality follows
+from Corollary~\ref{cor:noskip} applied to the monotone-context
+factorization produced in \S\ref{sec:tower}.
+\end{proof}
+
+\begin{remark}[the naive witness fails]\label{rem:naive}
+The tempting witness $h_1:=\neg f\wedge[\omega\ge 1]$ is wrong already at
+$k=1$. On three variables take $f(010)=f(111)=1$ and $f=0$ elsewhere: then
+$d(f)=1$, but along the chain $000<100<110<111$ the potential jumps to $1$
+at $110$ through the \emph{side} chain $000<010<110$, so $h_1$ takes values
+$0,0,1,0$ --- one descent, though $k-1=0$. The top-zone cap ($h\equiv 1$ on
+$\{\omega\ge k\}$) is exactly what repairs this. The example generalizes:
+side-chains can raise $\omega$ without any descent on the chain being
+traversed.
+\end{remark}
+
+\section{The nested tower theorem}\label{sec:tower}
+
+\begin{lemma}[monotone extension]\label{lem:ext}
+Let $h$ cover every violated pair of $f$. Then there is a monotone $g$ with
+$f(x)=g(x,\neg h(x))$: define
+\[
+g(y,v)\;:=\;1 \iff \exists\,x\le y\ \bigl(h(x)=1\text{ or }v=1\bigr)
+\wedge f(x)=1,
+\]
+a monotone function of $(y,v)$; the covering hypothesis rules out the only
+conflict (a witness $x\le y$ with $f(x)=1$ forcing $g=1$ while $f(y)=0$ ---
+such a pair is violated, so $h(x)=0$ and $h(y)=1$, and the disjunct
+$h(x)\vee\neg h(y)$ fails). No choice principle is needed --- the extension
+is an explicit finite disjunction. (Lean: \texttt{gExt}, \texttt{gExt\_mono},
+\texttt{gExt\_agrees}.)
+\end{lemma}
+
+\begin{theorem}[nested tower]\label{thm:tower}
+For every nonconstant $f:R^n\to R$,
+\[
+f\in T_k \iff d(f)\le k.
+\]
+Hence $d(f)$ is the minimal length of a nested $\chis$-tower over the
+monotone clone, each rung consuming exactly one $\chis$-twist. (Lean:
+\texttt{tower\_of\_decPts} for the upper bound --- constructive, producing
+the witness of \S\ref{sec:witness} at each rung --- and \texttt{F1\_lower}
+for the lower bound.)
+\end{theorem}
+
+\begin{proof}
+($\Leftarrow$, upper bound) Induction on $k$. If $d(f)=0$, $f$ is monotone.
+Otherwise let $h$ be the three-zone witness for $K:=d(f)$: by
+Theorem~\ref{thm:witness}(b) $d(h)=K-1$, by induction $h\in T_{K-1}$, and by
+Lemma~\ref{lem:ext} with Theorem~\ref{thm:witness}(a) $f=g(x,\neg h)$ for a
+monotone $g$, so $f\in T_K\subseteq T_k$. ($\Rightarrow$ is
+Corollary~\ref{cor:lower}.)
+\end{proof}
+
+\begin{remark}[models]\label{rem:models}
+In the formula model this recovers $I_{\mathrm{for}}(f)=d(f)$
+\cite{morizumi} with a \emph{nested} optimal form: Morizumi's construction
+is the parallel decomposition $f_1\vee(f_2\wedge\neg f_t)$, in which the
+recursive part and the fresh negation sit in separate branches;
+Theorem~\ref{thm:tower} shows a single nested branch suffices. In the
+circuit model the tower reading diverges from $I(f)$ once $d\ge 3$, by
+Markov's logarithmic law --- the tower is a formula-model object.
+\end{remark}
+
+\begin{remark}[level, not degree]\label{rem:level}
+The tower index is a filtration level at fixed cohomological degree one. No
+identification with any higher-degree or higher-level operator theory is
+claimed.
+\end{remark}
+
+\section{Mechanization}\label{sec:lean}
+
+All statements are verified in core Lean~4 (no mathlib), 19 theorems; the
+axiom print for every theorem is \texttt{[propext, Quot.sound]}, and the
+finite character tables (\texttt{gate\_table},
+\texttt{chiSigma\_eq\_not\_kMono}) depend on \textbf{no axioms}. There is no
+\texttt{native\_decide} and no \texttt{sorry}; the upper bound is
+constructive (no choice axiom). Correspondence:
+
+\begin{center}
+\begin{tabular}{ll}
+\toprule
+Paper & Lean (\texttt{lean/DecBridge/})\\
+\midrule
+Lemma~\ref{lem:alt} & \texttt{Words: rises\_le\_drops\_succ}\\
+Lemma~\ref{lem:transfer} & \texttt{Subadd: drop\_transfer}\\
+Theorem~\ref{thm:subadd} & \texttt{Subadd: subadd\_chain, subadd\_decOn}\\
+Proposition~\ref{prop:gate} & \texttt{Gates: gate\_table, chiSigma\_eq\_not\_kMono}\\
+Theorem~\ref{thm:witness} (abstract) & \texttt{Hgen: hgen\_covering, hgen\_drops\_le}\\
+$\omega$ is a descent potential & \texttt{Cube: cube\_descPotential}\\
+Lemma~\ref{lem:jump} & \texttt{CubeViol: omega\_viol}\\
+$\omega=$ chain-max (both directions) & \texttt{CubeDec: chainDrops\_le\_omega, omega\_attained}\\
+Theorem~\ref{thm:witness}(b) exact & \texttt{CubeDec: omega\_hgen\_le}\\
+Lemma~\ref{lem:ext} & \texttt{Tower: gExt, gExt\_mono, gExt\_agrees}\\
+Theorem~\ref{thm:tower} upper & \texttt{Tower: tower\_of\_decPts}\\
+Cor.~\ref{cor:lower} / Thm.~\ref{thm:tower} lower & \texttt{Tower: F1\_lower, decPts\_le\_of\_tower}\\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The Lean development is slightly \emph{more} general than the text:
+subadditivity is proved for chains of an arbitrary relation (no order
+axioms), and the witness theorem over an abstract descent potential, of
+which the cube $\omega$ (defined by weight-fuel recursion over lower covers)
+is an instance. The upper bound is stated over an explicit finite point
+family (agreement on the listed points), which is the meaningful content on
+the cube. Independent stdlib-only Python verifications (exhaustive $n\le 4$;
+randomized $n=5$) accompany the artifact.
+
+\subsection*{Authorship and provenance}
+
+Produced by \emph{KoreoLoop}, an autonomous multi-agent research loop
+developed and operated by the author, running frontier language models
+(Anthropic Claude family) for discovery, formalization, and adversarial
+verification, with the \textbf{Lean~4 kernel as the final acceptance gate}.
+The author directed the research programme and verified the pipeline. In
+line with the author's research-ethics policy, no claim of academic priority
+is made beyond full disclosure of how the work was produced. Corrections are
+invited. Artifact:
+\url{https://github.com/ycmath/cohomological-price-of-not}.
+
+\begin{thebibliography}{10}
+
+\bibitem{markov} A.~A. Markov, On the inversion complexity of a system of
+functions, \emph{J.~ACM} 5(4), 331--334, 1958. (Russian original:
+\emph{Doklady AN SSSR} 116(6), 917--919, 1957.)
+
+\bibitem{morizumi} H.~Morizumi, Limiting negations in formulas,
+\emph{ICALP 2009}, LNCS 5555, 701--712. (Preliminary version:
+arXiv:0811.0699, 2008.)
+
+\bibitem{fischer} M.~J. Fischer, Lectures on network complexity, Tech.
+Report 1104, Yale University, 1974 (revised 1996).
+
+\bibitem{sw} M.~Santha, C.~Wilson, Limiting negations in constant depth
+circuits, \emph{SIAM J.~Comput.} 22(2), 294--302, 1993.
+
+\bibitem{st} S.~Sung, K.~Tanaka, Limiting negations in bounded-depth
+circuits: an extension of Markov's theorem, \emph{ISAAC 2003}, LNCS 2906,
+108--116.
+
+\bibitem{am} K.~Amano, A.~Maruoka, A superpolynomial lower bound for a
+circuit computing the clique function with at most
+$\frac{1}{6}\log\log n$ negation gates, \emph{SIAM J.~Comput.} 35(1),
+201--216, 2005.
+
+\bibitem{km} V.~V. Kochergin, A.~V. Mikhailovich, Inversion complexity of
+functions of multi-valued logic, arXiv:1510.05942, 2015; journal version:
+\emph{Discrete Math.\ Appl.}, 2017.
+
+\bibitem{gk} S.~Guo, I.~Komargodski, Negation-limited formulas,
+\emph{APPROX/RANDOM 2015} (LIPIcs).
+
+\bibitem{wcy1} W.~C. Yang, Finite-energy epistemic logic with
+T0-preserving open updates, preprint, 2026.
+
+\bibitem{wcy2} W.~C. Yang, The Price of NOT on D4, preprint, 2026.
+
+\end{thebibliography}
+
+\end{document}

@@ -287,11 +287,10 @@ stdlib-only Python verifications (exhaustive n ≤ 4; randomized n = 5) are in
 
 ## Authorship & provenance
 
-This paper and its Lean artifact were produced in collaboration with an AI
-research pipeline operated by the author (frontier language models —
-Anthropic Claude family — for discovery, formalization, and adversarial
-verification), with the Lean 4 kernel as the final acceptance gate. The
-author directed the research programme and verified the pipeline. In line
-with the author's research-ethics policy, no claim of academic priority is
-made beyond full disclosure of how the work was produced. Corrections are
-invited.
+Produced by *KoreoLoop*, an autonomous multi-agent research loop developed
+and operated by the author, running frontier language models (Anthropic
+Claude family) for discovery, formalization, and adversarial verification,
+with the **Lean 4 kernel as the final acceptance gate**. The author directed
+the research programme and verified the pipeline. In line with the author's
+research-ethics policy, no claim of academic priority is made beyond full
+disclosure of how the work was produced. Corrections are invited.

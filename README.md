@@ -8,7 +8,9 @@
 gate.*
 
 **📄 Full paper (complete proofs + Lean correspondence table):
-[`paper/the-cohomological-price-of-not.md`](paper/the-cohomological-price-of-not.md)**
+[PDF](paper/the-cohomological-price-of-not.pdf) ·
+[LaTeX](paper/the-cohomological-price-of-not.tex) ·
+[Markdown](paper/the-cohomological-price-of-not.md)**
 — the sections below are an overview.
 
 ---
@@ -148,10 +150,10 @@ Reproduce: `cd lean && lake build` (Lean 4 v4.31.0 via elan), and
 
 ## Authorship & provenance
 
-Won Chul Yang, independent researcher (wcy0969@gmail.com). This note and its
-Lean artifact were produced in collaboration with an AI research pipeline
-operated by the author (frontier language models — Anthropic Claude family —
-for discovery, formalization, and adversarial verification), **with the
+Won Chul Yang, independent researcher (wcy0969@gmail.com). Produced by
+*KoreoLoop*, an autonomous multi-agent research loop developed and operated
+by the author, running frontier language models (Anthropic Claude family)
+for discovery, formalization, and adversarial verification, **with the
 Lean 4 kernel as the final acceptance gate**. The author directed the
 research programme and verified the pipeline. In line with the author's
 research-ethics policy, no claim of academic priority is made beyond full
