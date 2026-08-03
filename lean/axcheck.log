@@ -1,0 +1,36 @@
+⚠ [9/11] Replayed DecBridge.Tower
+warning: DecBridge/Tower.lean:246:14: This simp argument is unused:
+  hfp
+
+Hint: Omit it from the simp argument list.
+  simp [h̵f̵p̵,̵ ̵ih]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+warning: DecBridge/Tower.lean:248:14: This simp argument is unused:
+  hfp
+
+Hint: Omit it from the simp argument list.
+  simp [hfp̵,̵ ̵h̵f̵z, ih]
+
+Note: This linter can be disabled with `set_option linter.unusedSimpArgs false`
+ℹ [10/11] Replayed DecBridge
+info: DecBridge.lean:19:0: 'DecBridge.subadd_chain' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:20:0: 'DecBridge.subadd_decOn' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:21:0: 'DecBridge.rises_le_drops_succ' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:22:0: 'DecBridge.gate_table' does not depend on any axioms
+info: DecBridge.lean:23:0: 'DecBridge.chiSigma_eq_not_kMono' does not depend on any axioms
+info: DecBridge.lean:24:0: 'DecBridge.hgen_covering' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:25:0: 'DecBridge.hgen_drops_le' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:26:0: 'DecBridge.hgen_decOn_le' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:27:0: 'DecBridge.cube_descPotential' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:28:0: 'DecBridge.cube_hgen_drops_le' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:29:0: 'DecBridge.cube_hgen_decOn_le' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:30:0: 'DecBridge.omega_viol' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:31:0: 'DecBridge.cube_hgen_covering' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:32:0: 'DecBridge.cube_decOn_le_bound' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:33:0: 'DecBridge.omega_attained' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:34:0: 'DecBridge.omega_hgen_le' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:35:0: 'DecBridge.tower_of_decPts' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:36:0: 'DecBridge.F1_lower' depends on axioms: [propext, Quot.sound]
+info: DecBridge.lean:37:0: 'DecBridge.decPts_le_of_tower' depends on axioms: [propext, Quot.sound]
+Build completed successfully (11 jobs).

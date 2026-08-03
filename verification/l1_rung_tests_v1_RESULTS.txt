@@ -1,0 +1,33 @@
+==========================================================================
+gate typing -- gate-level typing on V4: nu(gamma) = chi_sigma(gamma)
+==========================================================================
+   gamma | k-monotone |  nu | chi_sigma | face-flip
+      id |       True |   0 |         0 |     0
+ sigma_s |      False |   1 |         1 |     1
+       P |       True |   0 |         0 |     1
+      sP |      False |   1 |         1 |     0
+
+[gate typing VERDICT] PASS -- nu = chi_sigma pointwise on V4.
+  face-flip mis-indicates at BOTH P (face-flip=1,nu=0) and sP (face-flip=0,nu=1) -- the dec
+  axis is the chi_sigma coordinate, not the face-flip .
+
+==========================================================================
+peel-one -- peel-one exact decrement (recovered R-model), exhaustive n=2,3
+==========================================================================
+n=2: dec-distribution {0: 4, 1: 10}; peel tested 10 non-monotone f; existence-fails 0; lower-bound-fails 0
+n=3: dec-distribution {0: 18, 1: 190, 2: 46}; peel tested 236 non-monotone f; existence-fails 0; lower-bound-fails 0
+
+[peel-one VERDICT] PASS -- every f with dec=k>=1 peels as f=g(x,NOT h), g monotone,
+  dec(h)=k-1 EXACTLY (never k-2 or less). One chi_sigma-twist per rung, no skipping:
+  the dec-ladder IS a k-step iterated-extension tower at n<=3.
+
+==========================================================================
+subadditivity -- subadditivity dec(g(x, NOT h)) <= dec(h)+1, exhaustive n=2,3
+==========================================================================
+n=2: 20 monotone g x 16 h = 320 compositions; violations: 0
+n=3: 168 monotone g x 256 h = 43008 compositions; violations: 0
+
+[subadditivity VERDICT] PASS -- one adjoined twist raises dec by at most 1.
+  (With peel-one existence this pins dec(f) = minimal tower length exactly.)
+
+ALL ASSERTIONS PASSED.

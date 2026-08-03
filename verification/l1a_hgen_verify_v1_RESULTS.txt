@@ -1,0 +1,15 @@
+==========================================================================
+h_gen: exhaustive n=2,3,4
+==========================================================================
+n=2: 10 nonmonotone f checked (by k: {1: 10}); failures: 0
+n=3: 236 nonmonotone f checked (by k: {1: 190, 2: 46}); failures: 0
+n=4: 65368 nonmonotone f checked (by k: {1: 23592, 2: 41776}); failures: 0
+PASS -- covering + monotone-g + dec(h_gen)=k-1 exhaustively, n<=4.
+
+==========================================================================
+h_gen: random sample n=5 (2000 f, all k)
+==========================================================================
+n=5: checked by k: {1: 65, 2: 1465, 3: 470}; failures: 0
+PASS.
+
+ALL ASSERTIONS PASSED.

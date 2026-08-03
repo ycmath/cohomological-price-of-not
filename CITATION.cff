@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "The Cohomological Price of NOT"
+authors:
+  - family-names: "Yang"
+    given-names: "Won Chul"
+    email: "wcy0969@gmail.com"
+    affiliation: "Independent researcher"
+year: 2026
+repository-code: "https://github.com/ycmath/cohomological-price-of-not"
+license: Apache-2.0
+keywords:
+  - negation complexity
+  - inversion complexity
+  - Markov decrease
+  - Boolean formulas
+  - group cohomology
+  - Lean 4
+  - formal verification
+abstract: >
+  The decrease invariant d(f) governing negation complexity acquires a
+  cohomological address: on the dual-rail four-valued lattice, the character
+  chi_sigma of the Klein four-group is the unique character pricing negation,
+  and d(f) equals the minimal length of a nested chi_sigma-tower, with an
+  explicit three-zone witness for the upper bound. All results are
+  machine-verified in core Lean 4 with kernel axioms propext and Quot.sound
+  only.

@@ -1,0 +1,13 @@
+==========================================================================
+(i) Step-2 alternation: rises <= drops+1, all binary sequences len<=16
+==========================================================================
+PASS -- 131070 sequences, 0 violations.
+
+==========================================================================
+(ii) dec(g(x,NOT h)) <= dec(h)+1 -- randomized sweep n=4,5
+==========================================================================
+n=4: 40000 compositions; violations 0; max observed dec(f)-dec(h) = 1
+n=5: 10000 compositions; violations 0; max observed dec(f)-dec(h) = 1
+
+PASS -- 0 violations; the bound is attained (max gap = 1) as expected.
+ALL ASSERTIONS PASSED.
