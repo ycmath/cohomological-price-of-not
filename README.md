@@ -2,8 +2,10 @@
 
 **Won Chul Yang** — independent researcher · wcy0969@gmail.com
 
+[![DOI](https://zenodo.org/badge/1321771964.svg)](https://zenodo.org/badge/latestdoi/1321771964)
+
 *Machine-assisted mathematics with the Lean 4 kernel as the final acceptance
-gate. Zenodo DOI: to be added upon deposit.*
+gate.*
 
 ---
 
