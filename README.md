@@ -144,9 +144,13 @@ Reproduce: `cd lean && lake build` (Lean 4 v4.31.0 via elan), and
    Math. Appl., 2017.
 8. S. Guo, I. Komargodski, *Negation-Limited Formulas*, APPROX/RANDOM 2015
    (LIPIcs).
-9. W. C. Yang, *Finite-energy epistemic logic with T0-preserving open
-   updates*, preprint, 2026.
-10. W. C. Yang, *The Price of NOT on D4*, preprint, 2026.
+9. W. C. Yang, *Finite-Energy Epistemic Logic with Conservative Pointed
+   Extension and Negation Geometry*, public edition v1.0, 2026.
+   https://github.com/ycmath/finite-energy-epistemic-logic
+   (an earlier draft circulated as *Finite-energy epistemic logic with
+   T0-preserving open updates*).
+10. W. C. Yang, *The Price of NOT on D4*, public edition v1.0, 2026.
+    https://github.com/ycmath/price-of-not-on-d4
 
 ## Authorship & provenance
 
