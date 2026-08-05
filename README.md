@@ -146,11 +146,11 @@ Reproduce: `cd lean && lake build` (Lean 4 v4.31.0 via elan), and
    (LIPIcs).
 9. W. C. Yang, *Finite-Energy Epistemic Logic with Conservative Pointed
    Extension and Negation Geometry*, public edition v1.0, 2026.
-   https://github.com/ycmath/finite-energy-epistemic-logic
-   (an earlier draft circulated as *Finite-energy epistemic logic with
+   https://github.com/ycmath/finite-energy-epistemic-logic,
+   DOI: 10.5281/zenodo.21800031 (an earlier draft circulated as *Finite-energy epistemic logic with
    T0-preserving open updates*).
 10. W. C. Yang, *The Price of NOT on D4*, public edition v1.0, 2026.
-    https://github.com/ycmath/price-of-not-on-d4
+    https://github.com/ycmath/price-of-not-on-d4, DOI: 10.5281/zenodo.21800033
 
 ## Authorship & provenance
 
